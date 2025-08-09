@@ -17,41 +17,57 @@ public class ContaBancaria {
     public void adicionarFundos(double valor) {
         if (valor > 0) {
             saldo += valor;
-            extrato.add("Depósito: +R$" + valor);
-            System.out.println(cliente.getNome() + " recebeu depósito de R$" + valor);
+            String mensagem = String.format("Depósito: +R$%.2f", valor);
+            extrato.add(mensagem);
+            System.out.println(String.format("%s recebeu depósito de R$%.2f", cliente.getNome(), valor));
+        } else {
+            System.out.println("Valor de depósito inválido. Deve ser maior que zero.");
         }
     }
 
     public boolean efetuarSaque(double valor) {
+        if (valor <= 0) {
+            System.out.println("Valor de saque inválido. Deve ser maior que zero.");
+            return false;
+        }
+
         if (valor <= saldo || possuiCreditoEspecial) {
             saldo -= valor;
-            extrato.add("Saque: -R$" + valor);
-            System.out.println(cliente.getNome() + " sacou R$" + valor);
+            String mensagem = String.format("Saque: -R$%.2f", valor);
+            extrato.add(mensagem);
+            System.out.println(String.format("%s sacou R$%.2f", cliente.getNome(), valor));
             return true;
         } else {
-            System.out.println("Saque negado para " + cliente.getNome() + ": saldo insuficiente.");
+            System.out.println(String.format("Saque negado para %s: saldo insuficiente.", cliente.getNome()));
             return false;
         }
     }
 
     public boolean realizarTransferencia(ContaBancaria destino, double valor) {
+        if (valor <= 0) {
+            System.out.println("Valor de transferência inválido. Deve ser maior que zero.");
+            return false;
+        }
+
         if (valor <= saldo || possuiCreditoEspecial) {
             saldo -= valor;
             destino.adicionarFundos(valor);
-            extrato.add("Transferência para " + destino.getCliente().getNome() + ": -R$" + valor);
-            System.out.println(cliente.getNome() + " transferiu R$" + valor + " para " + destino.getCliente().getNome());
+            String mensagem = String.format("Transferência para %s: -R$%.2f", destino.getCliente().getNome(), valor);
+            extrato.add(mensagem);
+            System.out.println(String.format("%s transferiu R$%.2f para %s", cliente.getNome(), valor, destino.getCliente().getNome()));
             return true;
         } else {
-            System.out.println("Transferência negada para " + cliente.getNome() + ": saldo insuficiente.");
+            System.out.println(String.format("Transferência negada para %s: saldo insuficiente.", cliente.getNome()));
             return false;
         }
     }
 
     public void emitirExtrato() {
-        System.out.println("\nExtrato da conta de " + cliente.getNome() + ":");
+        System.out.println("\n----- Extrato da conta de " + cliente.getNome() + " -----");
         for (String linha : extrato) {
             System.out.println("- " + linha);
         }
+        System.out.println("-------------------------------");
         System.out.printf("Saldo atual: R$%.2f\n", saldo);
     }
 
