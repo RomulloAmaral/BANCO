@@ -1,4 +1,4 @@
-// Banco.java - APENAS AS MODIFICAÇÕES/ADIÇÕES
+
 import java.util.ArrayList;
 import java.util.List;
 
